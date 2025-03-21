@@ -1,11 +1,18 @@
 <resources>
-    <string name="app_name">Digital wellness Optimizer</string>
+    <string name="app_name">Digital Wellness Optimizer</string>
     <string name="action_settings">Settings</string>
+
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+
+    <!-- Strings for App Usage Item Layout -->
+    <string name="app_name_label">App Name</string>
+    <string name="usage_time_label">Usage Time: 00:00:00</string>
+    <string name="last_opened_label">Last Opened: --</string>
+    <string name="date_label">Date: --</string>
 
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris

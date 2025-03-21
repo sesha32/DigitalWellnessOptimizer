@@ -2,8 +2,12 @@ package com.example.digitalwellnessoptimizer;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -56,5 +60,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         db.insert(TABLE_APP_USAGE, null, values);
         db.close();
+    }
+
+    // Retrieve All App Usage Data
+    public List<AppUsageModel> getAllAppUsage() {
+        List<AppUsageModel> appUsageList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_APP_USAGE, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String appName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_APP_NAME));
+                long usageTime = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_USAGE_TIME));
+                String lastOpened = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LAST_OPENED));
+                String date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE));
+
+                appUsageList.add(new AppUsageModel(appName, usageTime, lastOpened, date));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return appUsageList;
     }
 }
