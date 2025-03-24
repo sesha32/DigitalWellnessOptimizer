@@ -3,7 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/appUsageFragment"> <!-- Change this line -->
+
+    <fragment
+        android:id="@+id/appUsageFragment"
+        android:name="com.example.digitalwellnessoptimizer.AppUsageFragment"
+        android:label="App Usage"
+        tools:layout="@layout/fragment_app_usage">
+
+        <action
+            android:id="@+id/action_AppUsageFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+
+        <action
+            android:id="@+id/action_AppUsageFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/FirstFragment"
@@ -14,7 +29,12 @@
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
+
+        <action
+            android:id="@+id/action_FirstFragment_to_AppUsageFragment"
+            app:destination="@id/appUsageFragment" />
     </fragment>
+
     <fragment
         android:id="@+id/SecondFragment"
         android:name="com.example.digitalwellnessoptimizer.SecondFragment"
@@ -24,5 +44,10 @@
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
+
+        <action
+            android:id="@+id/action_SecondFragment_to_AppUsageFragment"
+            app:destination="@id/appUsageFragment" />
     </fragment>
+
 </navigation>
