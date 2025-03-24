@@ -4,6 +4,8 @@ import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -114,15 +116,30 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchAndStoreAppUsage() {
         List<UsageStats> usageStatsList = UsageStatsHelper.getAppUsageStats(this);
+        PackageManager packageManager = getPackageManager();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
+        List<AppUsageModel> appUsageList = dbHelper.getAllAppUsage(); // Initialize list
+
         for (UsageStats usageStats : usageStatsList) {
-            String appName = usageStats.getPackageName();
+            String packageName = usageStats.getPackageName();
             long usageTime = usageStats.getTotalTimeInForeground();
             String lastOpened = dateFormat.format(new Date(usageStats.getLastTimeUsed()));
             String date = dateFormat.format(new Date());
 
-            dbHelper.insertAppUsage(appName, usageTime, lastOpened, date);
+            Drawable appIcon;
+            try {
+                appIcon = packageManager.getApplicationIcon(packageName);
+            } catch (PackageManager.NameNotFoundException e) {
+                appIcon = getDrawable(R.drawable.default_app_icon); // Fallback icon
+            }
+
+            dbHelper.insertAppUsage(packageName, usageTime, lastOpened, date);
+            appUsageList.add(new AppUsageModel(packageName, usageTime, lastOpened, date, appIcon));
         }
+
+        // Refresh RecyclerView
+        adapter = new AppUsageAdapter(appUsageList);
+        recyclerView.setAdapter(adapter);
     }
 }

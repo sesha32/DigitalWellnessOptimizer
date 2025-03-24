@@ -3,44 +3,65 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="10dp"
     android:background="@android:color/white"
     android:elevation="2dp">
 
-    <TextView
-        android:id="@+id/text_app_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/app_name_label"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/black"
-        android:paddingBottom="4dp"/>
+    <!-- App Icon -->
+    <ImageView
+        android:id="@+id/app_icon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        android:scaleType="centerCrop" />
 
-    <TextView
-        android:id="@+id/text_usage_time"
-        android:layout_width="match_parent"
+    <!-- App Info Container -->
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/usage_time_label"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:paddingBottom="2dp"/>
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/text_last_opened"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/last_opened_label"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"
-        android:paddingBottom="2dp"/>
+        <!-- App Name -->
+        <TextView
+            android:id="@+id/text_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name_label"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:paddingBottom="4dp"/>
 
-    <TextView
-        android:id="@+id/text_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/date_label"
-        android:textSize="14sp"
-        android:textColor="@android:color/darker_gray"/>
+        <!-- Usage Time -->
+        <TextView
+            android:id="@+id/text_usage_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/usage_time_label"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:paddingBottom="2dp"/>
+
+        <!-- Last Opened -->
+        <TextView
+            android:id="@+id/text_last_opened"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_opened_label"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"
+            android:paddingBottom="2dp"/>
+
+        <!-- Date -->
+        <TextView
+            android:id="@+id/text_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/date_label"
+            android:textSize="14sp"
+            android:textColor="@android:color/darker_gray"/>
+    </LinearLayout>
+
 </LinearLayout>

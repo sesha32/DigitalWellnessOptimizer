@@ -1,11 +1,15 @@
 package com.example.digitalwellnessoptimizer;
 
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import java.util.List;
 
 public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHolder> {
@@ -26,10 +30,26 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AppUsageModel appUsage = appUsageList.get(position);
-        holder.appNameTextView.setText(appUsage.getAppName());
-        holder.usageTimeTextView.setText("Usage Time: " + formatTime(appUsage.getUsageTime()));
+
+        // Set package name instead of app name
+        holder.appNameTextView.setText(appUsage.getPackageName());
+
+        // Format and set usage time
+        holder.usageTimeTextView.setText("Usage Time: " + formatUsageTime(appUsage.getUsageTime()));
+
+        // Set last opened time
         holder.lastOpenedTextView.setText("Last Opened: " + appUsage.getLastOpened());
+
+        // Set date information
         holder.dateTextView.setText("Date: " + appUsage.getDate());
+
+        // Set App Icon with fallback
+        Drawable appIcon = appUsage.getAppIcon();
+        if (appIcon != null) {
+            holder.appIconImageView.setImageDrawable(appIcon);
+        } else {
+            holder.appIconImageView.setImageResource(R.drawable.default_app_icon); // Fallback icon
+        }
     }
 
     @Override
@@ -39,6 +59,7 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHo
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView appNameTextView, usageTimeTextView, lastOpenedTextView, dateTextView;
+        ImageView appIconImageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -46,14 +67,15 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHo
             usageTimeTextView = itemView.findViewById(R.id.text_usage_time);
             lastOpenedTextView = itemView.findViewById(R.id.text_last_opened);
             dateTextView = itemView.findViewById(R.id.text_date);
+            appIconImageView = itemView.findViewById(R.id.app_icon);
         }
     }
 
     // Helper method to format usage time in HH:MM:SS
-    private String formatTime(long milliseconds) {
-        int seconds = (int) (milliseconds / 1000) % 60;
-        int minutes = (int) ((milliseconds / (1000 * 60)) % 60);
-        int hours = (int) ((milliseconds / (1000 * 60 * 60)) % 24);
+    private String formatUsageTime(long usageTime) {
+        int seconds = (int) (usageTime / 1000) % 60;
+        int minutes = (int) ((usageTime / (1000 * 60)) % 60);
+        int hours = (int) ((usageTime / (1000 * 60 * 60)) % 24);
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }
