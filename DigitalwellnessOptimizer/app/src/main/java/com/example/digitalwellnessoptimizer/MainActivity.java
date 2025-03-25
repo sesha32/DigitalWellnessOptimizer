@@ -1,5 +1,6 @@
 package com.example.digitalwellnessoptimizer;
 
+import android.Manifest;
 import android.app.AppOpsManager;
 import android.app.usage.UsageStats;
 import android.content.Context;
@@ -7,13 +8,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -33,7 +38,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private DatabaseHelper dbHelper;
+    private DatabaseHelper databaseHelper;
     private RecyclerView recyclerView;
     private AppUsageAdapter adapter;
     private FloatingActionButton fab;
@@ -48,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        // Request notification permission for Android 13+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
+
         // Ensure correct initialization of NavController
         FragmentManager fragmentManager = getSupportFragmentManager();
         NavHostFragment navHostFragment = (NavHostFragment) fragmentManager.findFragmentById(R.id.nav_host_fragment_content_main);
@@ -57,16 +69,14 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
         // Initialize Database
-        dbHelper = new DatabaseHelper(this);
+        databaseHelper = new DatabaseHelper(this);
 
         // Initialize RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         // Fetch and display app usage data
-        List<AppUsageModel> appUsageList = dbHelper.getAllAppUsage();
-        adapter = new AppUsageAdapter(appUsageList);
-        recyclerView.setAdapter(adapter);
+        fetchAndStoreAppUsage();
 
         // Floating Action Button (FAB) - Navigate to AppUsageFragment
         fab = binding.fab;
@@ -77,8 +87,10 @@ public class MainActivity extends AppCompatActivity {
             requestUsageAccessPermission();
         } else {
             Toast.makeText(this, "Usage Access Permission Granted", Toast.LENGTH_SHORT).show();
-            fetchAndStoreAppUsage();
         }
+
+        // Start app usage monitoring service
+        startService(new Intent(this, AppUsageMonitorService.class));
     }
 
     @Override
@@ -119,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         PackageManager packageManager = getPackageManager();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-        List<AppUsageModel> appUsageList = dbHelper.getAllAppUsage(); // Initialize list
+        List<AppUsageModel> appUsageList = databaseHelper.getAllAppUsage(); // Initialize list
 
         for (UsageStats usageStats : usageStatsList) {
             String packageName = usageStats.getPackageName();
@@ -134,12 +146,27 @@ public class MainActivity extends AppCompatActivity {
                 appIcon = getDrawable(R.drawable.default_app_icon); // Fallback icon
             }
 
-            dbHelper.insertAppUsage(packageName, usageTime, lastOpened, date);
-            appUsageList.add(new AppUsageModel(packageName, usageTime, lastOpened, date, appIcon));
+            String category = databaseHelper.getAppCategory(packageName); // ✅ Get app category
+
+            databaseHelper.insertAppUsage(packageName, usageTime, lastOpened, date);
+            appUsageList.add(new AppUsageModel(packageName, usageTime, lastOpened, date, appIcon, category));
         }
 
         // Refresh RecyclerView
-        adapter = new AppUsageAdapter(appUsageList);
+        adapter = new AppUsageAdapter(this, appUsageList);
         recyclerView.setAdapter(adapter);
+    }
+
+    // Handle notification permission request result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 101) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "Notification permission granted", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Notification permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

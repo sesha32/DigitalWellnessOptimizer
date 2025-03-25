@@ -1,5 +1,6 @@
 package com.example.digitalwellnessoptimizer;
 
+import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,16 +14,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHolder> {
+    private Context context;
     private List<AppUsageModel> appUsageList;
 
-    public AppUsageAdapter(List<AppUsageModel> appUsageList) {
+    public AppUsageAdapter(Context context, List<AppUsageModel> appUsageList) {
+        this.context = context;
         this.appUsageList = appUsageList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(context)
                 .inflate(R.layout.item_app_usage, parent, false);
         return new ViewHolder(view);
     }

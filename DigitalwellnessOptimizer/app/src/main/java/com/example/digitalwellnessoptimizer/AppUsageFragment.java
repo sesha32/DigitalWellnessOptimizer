@@ -21,13 +21,13 @@ public class AppUsageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_app_usage, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        dbHelper = new DatabaseHelper(getContext());
+        dbHelper = new DatabaseHelper(requireContext());
         List<AppUsageModel> appUsageList = dbHelper.getAllAppUsage();
 
         if (!appUsageList.isEmpty()) {
-            adapter = new AppUsageAdapter(appUsageList);
+            adapter = new AppUsageAdapter(requireContext(), appUsageList);
             recyclerView.setAdapter(adapter);
         }
 

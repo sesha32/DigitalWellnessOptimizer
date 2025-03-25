@@ -7,14 +7,16 @@ public class AppUsageModel {
     private long usageTime;
     private String lastOpened;
     private String date;
-    private Drawable appIcon; // Add this field
+    private Drawable appIcon;
+    private String category;  // ✅ Added category field (productive/non-productive)
 
-    public AppUsageModel(String packageName, long usageTime, String lastOpened, String date, Drawable appIcon) {
+    public AppUsageModel(String packageName, long usageTime, String lastOpened, String date, Drawable appIcon, String category) {
         this.packageName = packageName;
         this.usageTime = usageTime;
         this.lastOpened = lastOpened;
         this.date = date;
         this.appIcon = appIcon;
+        this.category = category;
     }
 
     public String getPackageName() {
@@ -55,5 +57,13 @@ public class AppUsageModel {
 
     public void setAppIcon(Drawable appIcon) {
         this.appIcon = appIcon;
+    }
+
+    public String getCategory() {  // ✅ Getter for category
+        return category;
+    }
+
+    public void setCategory(String category) {  // ✅ Setter for category
+        this.category = category;
     }
 }
