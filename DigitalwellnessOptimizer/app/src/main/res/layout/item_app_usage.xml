@@ -10,7 +10,7 @@
 
     <!-- App Icon -->
     <ImageView
-        android:id="@+id/app_icon"
+        android:id="@+id/appIconImageView"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="10dp"
@@ -25,43 +25,42 @@
 
         <!-- App Name -->
         <TextView
-            android:id="@+id/text_app_name"
+            android:id="@+id/appNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name_label"
-            android:textSize="18sp"
+            android:text="App Name"
+            android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@android:color/black"
             android:paddingBottom="4dp"/>
 
         <!-- Usage Time -->
         <TextView
-            android:id="@+id/text_usage_time"
+            android:id="@+id/usageTimeTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/usage_time_label"
+            android:text="Usage Time"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:paddingBottom="2dp"/>
 
         <!-- Last Opened -->
         <TextView
-            android:id="@+id/text_last_opened"
+            android:id="@+id/lastOpenedTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/last_opened_label"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"
+            android:text="Last Opened"
+            android:textSize="12sp"
+            android:textColor="#666"
             android:paddingBottom="2dp"/>
 
-        <!-- Date -->
+        <!-- App Category -->
         <TextView
-            android:id="@+id/text_date"
+            android:id="@+id/categoryTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/date_label"
+            android:text="Category"
             android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"/>
+            android:textStyle="bold" />
     </LinearLayout>
-
 </LinearLayout>

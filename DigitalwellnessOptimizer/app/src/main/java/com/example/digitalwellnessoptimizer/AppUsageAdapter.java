@@ -1,6 +1,7 @@
 package com.example.digitalwellnessoptimizer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,7 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHo
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context)
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_app_usage, parent, false);
         return new ViewHolder(view);
     }
@@ -34,24 +35,31 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         AppUsageModel appUsage = appUsageList.get(position);
 
-        // Set package name instead of app name
+        // Set app name
         holder.appNameTextView.setText(appUsage.getPackageName());
 
-        // Format and set usage time
-        holder.usageTimeTextView.setText("Usage Time: " + formatUsageTime(appUsage.getUsageTime()));
+        // Set usage time
+        holder.usageTimeTextView.setText("Usage: " + formatUsageTime(appUsage.getUsageTime()));
 
         // Set last opened time
         holder.lastOpenedTextView.setText("Last Opened: " + appUsage.getLastOpened());
 
-        // Set date information
-        holder.dateTextView.setText("Date: " + appUsage.getDate());
-
-        // Set App Icon with fallback
+        // Set app icon
         Drawable appIcon = appUsage.getAppIcon();
         if (appIcon != null) {
             holder.appIconImageView.setImageDrawable(appIcon);
         } else {
-            holder.appIconImageView.setImageResource(R.drawable.default_app_icon); // Fallback icon
+            holder.appIconImageView.setImageResource(R.drawable.default_app_icon);
+        }
+
+        // Set category with color
+        String category = appUsage.getCategory();
+        holder.categoryTextView.setText(category);
+
+        if ("Non-Productive".equals(category)) {
+            holder.categoryTextView.setTextColor(Color.RED);
+        } else {
+            holder.categoryTextView.setTextColor(Color.GREEN);
         }
     }
 
@@ -61,24 +69,25 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView appNameTextView, usageTimeTextView, lastOpenedTextView, dateTextView;
+        TextView appNameTextView, usageTimeTextView, lastOpenedTextView, categoryTextView;
         ImageView appIconImageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            appNameTextView = itemView.findViewById(R.id.text_app_name);
-            usageTimeTextView = itemView.findViewById(R.id.text_usage_time);
-            lastOpenedTextView = itemView.findViewById(R.id.text_last_opened);
-            dateTextView = itemView.findViewById(R.id.text_date);
-            appIconImageView = itemView.findViewById(R.id.app_icon);
+            appNameTextView = itemView.findViewById(R.id.appNameTextView);
+            usageTimeTextView = itemView.findViewById(R.id.usageTimeTextView);
+            lastOpenedTextView = itemView.findViewById(R.id.lastOpenedTextView);
+            categoryTextView = itemView.findViewById(R.id.categoryTextView);
+            appIconImageView = itemView.findViewById(R.id.appIconImageView);
         }
     }
 
-    // Helper method to format usage time in HH:MM:SS
     private String formatUsageTime(long usageTime) {
-        int seconds = (int) (usageTime / 1000) % 60;
-        int minutes = (int) ((usageTime / (1000 * 60)) % 60);
-        int hours = (int) ((usageTime / (1000 * 60 * 60)) % 24);
+        long seconds = usageTime / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+        minutes = minutes % 60;
+        seconds = seconds % 60;
         return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 }
