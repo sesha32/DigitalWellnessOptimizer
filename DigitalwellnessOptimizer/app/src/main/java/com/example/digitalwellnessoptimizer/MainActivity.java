@@ -26,6 +26,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
 
 import com.example.digitalwellnessoptimizer.databinding.ActivityMainBinding;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -34,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
@@ -91,6 +95,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Start app usage monitoring service
         startService(new Intent(this, AppUsageMonitorService.class));
+
+        // ✅ Schedule periodic face capture every 2 hours
+        WorkRequest faceCaptureWork = new PeriodicWorkRequest.Builder(FaceCaptureWorker.class, 2, TimeUnit.HOURS)
+                .build();
+        WorkManager.getInstance(this).enqueue(faceCaptureWork);
     }
 
     @Override
