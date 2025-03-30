@@ -96,6 +96,10 @@ public class MainActivity extends AppCompatActivity {
         // Start app usage monitoring service
         startService(new Intent(this, AppUsageMonitorService.class));
 
+        // ✅ Start Sleep Tracking Service
+        Intent serviceIntent = new Intent(this, SleepTrackingService.class);
+        startService(serviceIntent);
+
         // ✅ Schedule periodic face capture every 2 hours
         WorkRequest faceCaptureWork = new PeriodicWorkRequest.Builder(FaceCaptureWorker.class, 2, TimeUnit.HOURS)
                 .build();
