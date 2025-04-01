@@ -144,7 +144,7 @@ public class MainActivity extends AppCompatActivity {
         PackageManager packageManager = getPackageManager();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
 
-        List<AppUsageModel> appUsageList = databaseHelper.getAllAppUsage(); // Initialize list
+        List<AppUsageModel> appUsageList = databaseHelper.getAppUsageData(); // Initialize list
 
         for (UsageStats usageStats : usageStatsList) {
             String packageName = usageStats.getPackageName();

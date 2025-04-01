@@ -9,8 +9,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -93,6 +96,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public List<SleepDataModel> getSleepData() {
+        List<SleepDataModel> sleepDataList = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_SLEEP_DATA + " ORDER BY " + COLUMN_TIMESTAMP + " DESC", null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                long timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_TIMESTAMP));
+                String status = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_SLEEP_STATE));
+
+                sleepDataList.add(new SleepDataModel(timestamp, status)); // Passing long timestamp
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return sleepDataList;
+    }
+
+
     private void insertDefaultCategories(SQLiteDatabase db) {
         String[] productiveApps = {
                 "com.google.android.docs", "com.google.android.apps.docs",
@@ -161,7 +184,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<AppUsageModel> getAllAppUsage() {
+    public List<AppUsageModel> getAppUsageData() {
         List<AppUsageModel> appUsageList = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
 
